@@ -1,8 +1,10 @@
 import Link from "next/link";
-import { listEvents } from "@/lib/db";
+import { getContractEvents } from "@/lib/live";
+
+export const dynamic = "force-dynamic";
 
 export default async function ActivityPage() {
-  const events = await listEvents().catch(() => []);
+  const events = await getContractEvents().catch(() => []);
   return (
     <main className="site-shell">
       <nav className="nav"><Link className="brand" href="/">Memory0G</Link><Link href="/explorer">Explorer</Link></nav>
@@ -15,7 +17,8 @@ export default async function ActivityPage() {
         {events.map((event: any, index) => (
           <div className="event" key={`${event.txHash ?? index}-${event.logIndex ?? index}`}>
             <strong>{String(event.eventName ?? "Event")}</strong>
-            <span className="hash">{String(event.txHash ?? "")}</span>
+            <a className="hash" href={String(event.explorer ?? "#")}>{String(event.txHash ?? "")}</a>
+            <span>{JSON.stringify(event.args ?? {})}</span>
           </div>
         ))}
       </section>

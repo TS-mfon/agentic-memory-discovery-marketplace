@@ -9,3 +9,5 @@ broadcast
 *.log
 *.tsbuildinfo
 .vercel
+.agents.local.json
+agent-proof-report.json

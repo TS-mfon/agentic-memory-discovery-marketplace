@@ -48,6 +48,20 @@ export default async function Page() {
             <span>0G Storage</span>
             <span>Encrypted Memory</span>
           </div>
+          <div className="proof-rail">
+            <div>
+              <span>identity</span>
+              <strong>on-chain profiles</strong>
+            </div>
+            <div>
+              <span>retrieval</span>
+              <strong>capability indexed</strong>
+            </div>
+            <div>
+              <span>memory</span>
+              <strong>storage root proofs</strong>
+            </div>
+          </div>
         </div>
       </section>
 

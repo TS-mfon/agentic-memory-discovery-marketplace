@@ -1,4 +1,6 @@
-import { registry } from "./chain";
+import { ethers } from "ethers";
+import { agentRegistryAbi } from "@shared/index";
+import { provider, registry } from "./chain";
 import { config } from "./config";
 import { listEvents, listUploads } from "./db";
 
@@ -32,10 +34,37 @@ export async function getAgents() {
 export async function getMemoryOverview() {
   const [agents, events, uploads] = await Promise.all([
     getAgents().catch(() => []),
-    listEvents().catch(() => []),
+    getContractEvents().catch(() => listEvents().catch(() => [])),
     listUploads().catch(() => [])
   ]);
   const publicAgents = agents.filter((agent) => agent.accessPolicy === 0).length;
   const capabilityCount = new Set(agents.flatMap((agent) => agent.tags)).size;
   return { agents, events, uploads, publicAgents, capabilityCount };
+}
+
+export async function getContractEvents() {
+  if (!config.contractAddress) return [];
+  const rpc = provider();
+  const latest = await rpc.getBlockNumber();
+  const fromBlock = Math.max(config.deploymentBlock || 0, latest - 250_000);
+  const iface = new ethers.Interface(agentRegistryAbi);
+  const logs = await rpc.getLogs({ address: config.contractAddress, fromBlock, toBlock: latest });
+  return logs.flatMap((log) => {
+    try {
+      const parsed = iface.parseLog(log);
+      if (!parsed) return [];
+      return [{
+        eventName: parsed.name,
+        txHash: log.transactionHash,
+        blockNumber: log.blockNumber,
+        logIndex: log.index,
+        explorer: `${config.explorerUrl}/tx/${log.transactionHash}`,
+        args: Object.fromEntries(
+          parsed.fragment.inputs.map((input, index) => [input.name, parsed.args[index]?.toString?.() ?? parsed.args[index]])
+        )
+      }];
+    } catch {
+      return [];
+    }
+  }).reverse();
 }

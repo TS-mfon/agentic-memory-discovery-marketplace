@@ -11,7 +11,8 @@
     "test:contracts": "forge test --root contracts",
     "deploy:contract": "forge create contracts/src/AgentRegistry.sol:AgentRegistry --constructor-args $DEPLOYER_ADDRESS --rpc-url https://evmrpc.0g.ai --private-key $DEPLOYER_PRIVATE_KEY --broadcast",
     "deploy:mainnet": "forge build --root contracts && tsx scripts/deploy-mainnet.ts",
-    "agent:demo": "tsx agents/memory-agent.ts"
+    "agent:demo": "tsx agents/memory-agent.ts",
+    "agents:smoke": "tsx scripts/five-agent-smoke.ts"
   },
   "dependencies": {
     "@0gfoundation/0g-ts-sdk": "^1.2.6",
