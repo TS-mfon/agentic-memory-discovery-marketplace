@@ -774,3 +774,301 @@ select:focus {
     grid-template-columns: 1fr;
   }
 }
+
+/* White and purple usability redesign */
+:root {
+  color-scheme: light;
+  --bg: #fbf9ff;
+  --text: #181029;
+  --muted: #6f6680;
+  --line: rgba(88, 61, 140, 0.16);
+  --panel: rgba(255, 255, 255, 0.88);
+  --panel-2: rgba(255, 255, 255, 0.94);
+  --accent: #7c3aed;
+  --accent-2: #d946ef;
+  --sky: #a855f7;
+  --danger: #dc2626;
+}
+
+html {
+  background: var(--bg);
+}
+
+body {
+  color: var(--text);
+  background:
+    radial-gradient(circle at 12% 10%, rgba(196, 181, 253, 0.58), transparent 34%),
+    radial-gradient(circle at 88% 4%, rgba(240, 171, 252, 0.48), transparent 30%),
+    linear-gradient(135deg, #ffffff 0%, #fbf7ff 45%, #efe7ff 100%);
+}
+
+body::before {
+  background-image:
+    linear-gradient(rgba(124, 58, 237, 0.08) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(124, 58, 237, 0.07) 1px, transparent 1px);
+  opacity: 0.55;
+}
+
+p,
+.hero-copy,
+.label,
+.status span,
+.visual-card span,
+.frame-header,
+.chain-strip span,
+label,
+.empty {
+  color: var(--muted);
+}
+
+.nav {
+  background: rgba(255, 255, 255, 0.78);
+  box-shadow: 0 18px 60px rgba(84, 46, 142, 0.12);
+}
+
+.brand,
+.nav a:not(.brand),
+.button-link.ghost,
+.pitch-card,
+.tier-card {
+  color: var(--text);
+}
+
+.brand::before {
+  border-color: rgba(124, 58, 237, 0.45);
+  background: linear-gradient(135deg, #7c3aed, #d946ef);
+  box-shadow: 0 0 24px rgba(124, 58, 237, 0.25);
+}
+
+.nav a:not(.brand),
+.button-link.ghost {
+  background: rgba(124, 58, 237, 0.06);
+}
+
+.button-link,
+button,
+.pill.live {
+  color: #ffffff;
+  background: linear-gradient(135deg, #6d28d9, #a855f7 52%, #d946ef);
+  box-shadow: 0 18px 42px rgba(124, 58, 237, 0.22);
+}
+
+.button-link.ghost {
+  border: 1px solid rgba(124, 58, 237, 0.18);
+  box-shadow: none;
+}
+
+.landing-hero {
+  min-height: calc(100vh - 110px);
+}
+
+.product-frame,
+.pitch-card,
+.tier-card,
+.stat,
+.event,
+.panel,
+.activity-card,
+.action-band,
+.save-card {
+  border: 1px solid rgba(124, 58, 237, 0.14);
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.96), rgba(250, 245, 255, 0.88)),
+    #ffffff;
+  box-shadow: 0 24px 70px rgba(83, 46, 136, 0.12);
+}
+
+.product-frame::before {
+  border-color: rgba(124, 58, 237, 0.16);
+  background:
+    linear-gradient(90deg, transparent, rgba(168, 85, 247, 0.14), transparent),
+    repeating-linear-gradient(90deg, rgba(124, 58, 237, 0.1) 0 1px, transparent 1px 42px);
+}
+
+.visual-card {
+  background: rgba(124, 58, 237, 0.06);
+}
+
+.visual-card.hot {
+  background: linear-gradient(135deg, rgba(124, 58, 237, 0.18), rgba(217, 70, 239, 0.11));
+}
+
+.journey-steps {
+  display: grid;
+  gap: 10px;
+  margin-top: 14px;
+  position: relative;
+  z-index: 1;
+}
+
+.journey-steps div {
+  display: grid;
+  grid-template-columns: 34px 1fr;
+  gap: 3px 12px;
+  align-items: center;
+  border: 1px solid rgba(124, 58, 237, 0.14);
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.72);
+  padding: 12px;
+}
+
+.journey-steps span {
+  grid-row: span 2;
+  display: grid;
+  place-items: center;
+  width: 34px;
+  height: 34px;
+  border-radius: 8px;
+  color: #ffffff;
+  background: linear-gradient(135deg, #7c3aed, #d946ef);
+  font-weight: 900;
+}
+
+.journey-steps p,
+.action-band p,
+.save-card p,
+.helper-text {
+  margin: 0;
+  color: var(--muted);
+}
+
+.action-band {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 16px;
+  border-radius: 8px;
+  padding: 20px;
+  margin-top: 18px;
+}
+
+.action-band h2 {
+  margin: 0 0 4px;
+}
+
+.microcopy {
+  color: #6d28d9;
+  font-weight: 800;
+}
+
+label span {
+  display: block;
+  color: var(--muted);
+  font-size: 13px;
+  font-weight: 500;
+}
+
+input,
+textarea,
+select {
+  color: var(--text);
+  background: rgba(255, 255, 255, 0.92);
+  border-color: rgba(124, 58, 237, 0.18);
+}
+
+.hash,
+.hash-link,
+.detail-grid dd,
+.save-card strong {
+  overflow-wrap: anywhere;
+  word-break: break-word;
+}
+
+.hash-link {
+  display: inline-flex;
+  width: fit-content;
+  max-width: 100%;
+  color: #6d28d9;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  font-size: 12px;
+  font-weight: 800;
+  text-decoration: none;
+}
+
+.activity-list {
+  display: grid;
+  gap: 14px;
+}
+
+.activity-card {
+  border-radius: 8px;
+  padding: 16px;
+  overflow: hidden;
+}
+
+.activity-topline {
+  display: flex;
+  justify-content: space-between;
+  gap: 14px;
+  align-items: flex-start;
+}
+
+.activity-topline h2 {
+  margin: 4px 0 0;
+}
+
+.activity-type {
+  color: #7c3aed;
+  font-size: 12px;
+  font-weight: 900;
+  text-transform: uppercase;
+}
+
+.detail-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 10px;
+  margin: 14px 0;
+}
+
+.detail-grid div {
+  min-width: 0;
+  border: 1px solid rgba(124, 58, 237, 0.12);
+  border-radius: 8px;
+  padding: 10px;
+  background: rgba(250, 245, 255, 0.78);
+}
+
+.detail-grid dt {
+  color: var(--muted);
+  font-size: 12px;
+  text-transform: capitalize;
+}
+
+.detail-grid dd {
+  margin: 4px 0 0;
+  color: var(--text);
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  font-size: 12px;
+}
+
+.save-card {
+  display: grid;
+  gap: 6px;
+  border-radius: 8px;
+  padding: 14px;
+}
+
+.save-card span {
+  color: #7c3aed;
+  font-size: 12px;
+  font-weight: 900;
+  text-transform: uppercase;
+}
+
+.save-card strong {
+  color: var(--text);
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  font-size: 16px;
+}
+
+.save-card.compact {
+  box-shadow: none;
+}
+
+@media (max-width: 720px) {
+  .action-band,
+  .activity-topline {
+    display: grid;
+  }
+}

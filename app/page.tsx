@@ -1,5 +1,4 @@
 import Link from "next/link";
-import { config } from "@/lib/config";
 import { getMemoryOverview } from "@/lib/live";
 
 export const dynamic = "force-dynamic";
@@ -21,21 +20,21 @@ export default async function Page() {
 
       <section className="landing-hero">
         <div className="hero-copy-block">
-          <div className="eyebrow">0G Mainnet Agent Discovery</div>
-          <h1>Agents that remember, prove, and get discovered.</h1>
+          <div className="eyebrow">Universal Agent Memory</div>
+          <h1>Memory agents can carry across every framework.</h1>
           <p className="hero-copy">
-            Memory0G gives AI agents an on-chain identity, searchable capability tags, and a
-            persistent 0G Storage pointer for long-term memory.
+            Memory0G gives agents a searchable identity, persistent memory roots, and a clean proof
+            trail on 0G Mainnet. Store, register, retrieve, and verify without guessing.
           </p>
           <div className="hero-actions">
-            <Link className="button-link" href="/explorer">Explore live agents</Link>
-            <Link className="button-link ghost" href="/register">Register an agent</Link>
+            <Link className="button-link" href="/register">Register agent</Link>
+            <Link className="button-link ghost" href="/explorer">Explore memory</Link>
           </div>
         </div>
         <div className="product-frame">
           <div className="frame-header">
             <span />
-            <strong>Discovery graph</strong>
+            <strong>Memory proof flow</strong>
           </div>
           <div className="visual-grid">
             <div className="visual-card hot"><span>Agents</span><strong>{agents.length}</strong></div>
@@ -43,49 +42,35 @@ export default async function Page() {
             <div className="visual-card"><span>Public memory</span><strong>{publicAgents}</strong></div>
             <div className="visual-card"><span>Updates</span><strong>{uploads.length}</strong></div>
           </div>
-          <div className="chain-strip">
-            <span>Agent Registry</span>
-            <span>0G Storage</span>
-            <span>Encrypted Memory</span>
-          </div>
-          <div className="proof-rail">
-            <div>
-              <span>identity</span>
-              <strong>on-chain profiles</strong>
-            </div>
-            <div>
-              <span>retrieval</span>
-              <strong>capability indexed</strong>
-            </div>
-            <div>
-              <span>memory</span>
-              <strong>storage root proofs</strong>
-            </div>
+          <div className="journey-steps">
+            <div><span>1</span><strong>Register</strong><p>Create agent identity.</p></div>
+            <div><span>2</span><strong>Store</strong><p>Upload memory snapshot.</p></div>
+            <div><span>3</span><strong>Verify</strong><p>Check root on explorer.</p></div>
           </div>
         </div>
       </section>
 
       <section className="pitch-grid">
         <div className="pitch-card">
-          <h2>Search agents by what they can do.</h2>
-          <p>Capability tags are indexed on-chain and mirrored into a fast discovery interface.</p>
+          <h2>Permanent agent memory.</h2>
+          <p>Keep useful context beyond one chat, one model, or one framework.</p>
         </div>
         <div className="pitch-card">
-          <h2>Keep context out of contracts.</h2>
-          <p>Only memory roots live on 0G Chain. Full snapshots live in 0G Storage.</p>
+          <h2>Verifiable recall history.</h2>
+          <p>Each update anchors a root so users can audit what changed.</p>
         </div>
         <div className="pitch-card">
-          <h2>Public, private, or permissioned.</h2>
-          <p>Memory access policy is enforced by the registry and encrypted before storage when needed.</p>
+          <h2>Discovery by capability.</h2>
+          <p>Find agents by what they can do and inspect their proof trail.</p>
         </div>
       </section>
 
-      <section className="proof-band">
+      <section className="action-band">
         <div>
-          <div className="label">Configured contract</div>
-          <div className="hash">{config.contractAddress || "Deploy contract and set NEXT_PUBLIC_CONTRACT_ADDRESS"}</div>
+          <h2>Start with identity.</h2>
+          <p>Register your agent first, then save the address for future memory updates.</p>
         </div>
-        <Link className="button-link ghost" href="/dashboard">Open operator dashboard</Link>
+        <Link className="button-link ghost" href="/dashboard">Open dashboard</Link>
       </section>
     </main>
   );

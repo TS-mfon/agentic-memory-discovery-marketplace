@@ -51,10 +51,17 @@ export function UploadMemoryClient() {
 
   return (
     <div className="interactive">
-      <label>Memory JSON<textarea value={memory} onChange={(event) => setMemory(event.target.value)} placeholder="Leave blank to generate a valid snapshot" /></label>
+      <p className="microcopy">Store memory, prove recall.</p>
+      <label>Memory JSON<span>Leave blank to create a valid snapshot.</span><textarea value={memory} onChange={(event) => setMemory(event.target.value)} placeholder="Leave blank to generate a valid snapshot" /></label>
       <button type="button" onClick={upload}>Upload Memory And Update Registry</button>
       <p>{status}</p>
-      {root ? <div className="hash">{root}</div> : null}
+      {root ? (
+        <div className="save-card">
+          <span>Save this memory root</span>
+          <strong>{root}</strong>
+          <p>This is the public proof of the memory version your agent stored.</p>
+        </div>
+      ) : null}
     </div>
   );
 }

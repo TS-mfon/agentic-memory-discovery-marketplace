@@ -15,6 +15,8 @@ export function RegisterAgentClient() {
   const [metadata, setMetadata] = useState('{"description":"Autonomous 0G memory agent"}');
   const [accessPolicy, setAccessPolicy] = useState("0");
   const [status, setStatus] = useState("Register an agent profile on 0G Mainnet.");
+  const [agentAddress, setAgentAddress] = useState("");
+  const [txHash, setTxHash] = useState("");
 
   async function register() {
     try {
@@ -40,8 +42,15 @@ export function RegisterAgentClient() {
         value: BigInt(prepared.transaction.value),
         data: prepared.transaction.data
       });
+      setTxHash(sent.hash);
       await sent.wait();
-      setStatus("Agent registered. Open Explorer to view it.");
+      const confirmed = await fetch("/api/agents/confirm", {
+        method: "POST",
+        headers: { "content-type": "application/json" },
+        body: JSON.stringify({ txHash: sent.hash })
+      }).then((res) => res.json());
+      setAgentAddress(confirmed.agentAddress || await signer.getAddress());
+      setStatus("Agent registered. Save its address.");
     } catch (error) {
       setStatus(error instanceof Error ? error.message : "Registration failed");
     }
@@ -49,12 +58,21 @@ export function RegisterAgentClient() {
 
   return (
     <div className="interactive">
-      <label>Agent name<input value={name} onChange={(event) => setName(event.target.value)} /></label>
-      <label>Capabilities<input value={tags} onChange={(event) => setTags(event.target.value)} /></label>
-      <label>Metadata<textarea value={metadata} onChange={(event) => setMetadata(event.target.value)} /></label>
-      <label>Access policy<select value={accessPolicy} onChange={(event) => setAccessPolicy(event.target.value)}><option value="0">Public</option><option value="1">Private</option><option value="2">Permissioned</option></select></label>
+      <p className="microcopy">Create searchable identity.</p>
+      <label>Agent name<span>Human-readable name in Explorer.</span><input value={name} onChange={(event) => setName(event.target.value)} /></label>
+      <label>Capabilities<span>Comma-separated skills users search for.</span><input value={tags} onChange={(event) => setTags(event.target.value)} /></label>
+      <label>Metadata<span>Short JSON description for apps.</span><textarea value={metadata} onChange={(event) => setMetadata(event.target.value)} /></label>
+      <label>Access policy<span>Who can read future memory roots.</span><select value={accessPolicy} onChange={(event) => setAccessPolicy(event.target.value)}><option value="0">Public</option><option value="1">Private</option><option value="2">Permissioned</option></select></label>
       <button type="button" onClick={register}>Register Agent On 0G</button>
       <p>{status}</p>
+      {agentAddress ? (
+        <div className="save-card">
+          <span>Save this agent address</span>
+          <strong>{agentAddress}</strong>
+          <p>Use it to find the profile and verify memory updates later.</p>
+        </div>
+      ) : null}
+      {txHash ? <a className="hash-link" href={`https://chainscan.0g.ai/tx/${txHash}`}>View transaction</a> : null}
     </div>
   );
 }
