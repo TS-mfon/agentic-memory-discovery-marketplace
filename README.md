@@ -93,7 +93,7 @@ The script prints the deterministic commitment to anchor in the receipt. For fin
 - GitHub repository: `https://github.com/ts-mfon/guardianmesh`
 - 0G mainnet contract: fill after deployment
 - 0G Explorer: `https://chainscan.0g.ai/address/<contract>`
-- Frontend demo: fill after Vercel deploy
+- Frontend demo: `https://agentic-memory-discovery-marketplac.vercel.app`
 
 ## X Post Template
 
