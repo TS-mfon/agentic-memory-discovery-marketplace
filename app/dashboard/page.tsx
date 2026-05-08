@@ -1,10 +1,11 @@
 import Link from "next/link";
 import { getMemoryOverview } from "@/lib/live";
+import { MemoryMetricGrid } from "@/components/MemoryLiveClient";
 
 export const dynamic = "force-dynamic";
 
 export default async function DashboardPage() {
-  const { agents, uploads, events, publicAgents, capabilityCount } = await getMemoryOverview();
+  const { agents, uploads } = await getMemoryOverview();
   return (
     <main className="site-shell">
       <nav className="nav"><Link className="brand" href="/">Memory0G</Link><Link href="/activity">Activity</Link></nav>
@@ -12,12 +13,7 @@ export default async function DashboardPage() {
         <div className="eyebrow">Operator Console</div>
         <h1>Dashboard</h1>
       </section>
-      <section className="stats flush">
-        <div className="stat"><div className="label">Agents</div><div className="metric">{agents.length}</div></div>
-        <div className="stat"><div className="label">Public memory</div><div className="metric">{publicAgents}</div></div>
-        <div className="stat"><div className="label">Capabilities</div><div className="metric">{capabilityCount}</div></div>
-        <div className="stat"><div className="label">Events</div><div className="metric">{events.length}</div></div>
-      </section>
+      <MemoryMetricGrid fallbackAgents={agents.length} mode="dashboard" />
       <section className="pitch-grid">
         <Link className="pitch-card link-card" href="/explorer">Agent Explorer</Link>
         <Link className="pitch-card link-card" href="/register">Register Agent</Link>

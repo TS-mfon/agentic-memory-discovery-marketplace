@@ -22,7 +22,7 @@ export const agentRegistryAbi = [
   "function revokeMemoryAccess(address grantee)",
   "function getAgentsByCapability(string tag) view returns (address[])",
   "function getAllAgents() view returns (address[])",
-  "function getAgentProfile(address agentAddress) view returns (string name,string[] capabilityTags,string capabilityMetadata,bytes32 memoryRootHash,address owner,uint256 registeredAt,uint256 lastMemoryUpdate,uint256 totalMemoryUpdates,uint8 accessPolicy)",
+  "function getAgentProfile(address agentAddress) view returns ((string name,string[] capabilityTags,string capabilityMetadata,bytes32 memoryRootHash,address owner,uint256 registeredAt,uint256 lastMemoryUpdate,uint256 totalMemoryUpdates,uint8 accessPolicy))",
   "function canReadMemory(address reader,address agentAddress) view returns (bool)",
   "function getMemoryRootHash(address agentAddress) view returns (bytes32)",
   "event AgentRegistered(address indexed agentAddress,string name,string[] capabilityTags,uint256 timestamp)",

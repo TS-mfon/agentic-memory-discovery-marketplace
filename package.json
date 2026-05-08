@@ -15,7 +15,8 @@
     "agents:smoke": "tsx scripts/five-agent-smoke.ts"
   },
   "dependencies": {
-    "@0gfoundation/0g-ts-sdk": "^1.2.6",
+    "@0gfoundation/0g-compute-ts-sdk": "^0.8.2",
+    "@0gfoundation/0g-storage-ts-sdk": "^1.2.9",
     "ethers": "6.13.1",
     "next": "^15.5.6",
     "pg": "^8.16.3",

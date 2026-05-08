@@ -469,6 +469,7 @@ button {
   background: rgba(13, 18, 20, 0.86);
   display: grid;
   gap: 12px;
+  min-width: 0;
 }
 
 .focus {
@@ -1047,6 +1048,8 @@ select {
   gap: 6px;
   border-radius: 8px;
   padding: 14px;
+  min-width: 0;
+  overflow: hidden;
 }
 
 .save-card span {
@@ -1060,6 +1063,9 @@ select {
   color: var(--text);
   font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
   font-size: 16px;
+  max-width: 100%;
+  overflow-wrap: anywhere;
+  word-break: break-word;
 }
 
 .save-card.compact {

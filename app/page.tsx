@@ -1,10 +1,11 @@
 import Link from "next/link";
 import { getMemoryOverview } from "@/lib/live";
+import { MemoryMetricGrid } from "@/components/MemoryLiveClient";
 
 export const dynamic = "force-dynamic";
 
 export default async function Page() {
-  const { agents, uploads, events, publicAgents, capabilityCount } = await getMemoryOverview();
+  const { agents } = await getMemoryOverview();
 
   return (
     <main className="site-shell">
@@ -36,12 +37,7 @@ export default async function Page() {
             <span />
             <strong>Memory proof flow</strong>
           </div>
-          <div className="visual-grid">
-            <div className="visual-card hot"><span>Agents</span><strong>{agents.length}</strong></div>
-            <div className="visual-card"><span>Capabilities</span><strong>{capabilityCount}</strong></div>
-            <div className="visual-card"><span>Public memory</span><strong>{publicAgents}</strong></div>
-            <div className="visual-card"><span>Updates</span><strong>{uploads.length}</strong></div>
-          </div>
+          <MemoryMetricGrid fallbackAgents={agents.length} />
           <div className="journey-steps">
             <div><span>1</span><strong>Register</strong><p>Create agent identity.</p></div>
             <div><span>2</span><strong>Store</strong><p>Upload memory snapshot.</p></div>

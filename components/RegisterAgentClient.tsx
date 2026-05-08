@@ -1,7 +1,9 @@
 "use client";
 
 import { useState } from "react";
-import { BrowserProvider } from "ethers";
+import { BrowserProvider, Contract } from "ethers";
+import { agentRegistryAbi } from "@shared/index";
+import { clientConfig } from "@/lib/config";
 
 declare global {
   interface Window {
@@ -23,33 +25,19 @@ export function RegisterAgentClient() {
       if (!window.ethereum) throw new Error("Install an EVM wallet.");
       const provider = new BrowserProvider(window.ethereum);
       const network = await provider.getNetwork();
-      if (Number(network.chainId) !== 16661) throw new Error("Switch wallet to 0G Mainnet chain 16661.");
-      const prepared = await fetch("/api/agents/prepare-register", {
-        method: "POST",
-        headers: { "content-type": "application/json" },
-        body: JSON.stringify({
-          name,
-          capabilityTags: tags.split(",").map((tag) => tag.trim()).filter(Boolean),
-          capabilityMetadata: metadata,
-          accessPolicy: Number(accessPolicy)
-        })
-      }).then((res) => res.json());
-      if (prepared.error) throw new Error(prepared.error);
+      if (Number(network.chainId) !== clientConfig.chainId) {
+        throw new Error(`Switch wallet to 0G Mainnet chain ${clientConfig.chainId}.`);
+      }
+      if (!clientConfig.contractAddress) throw new Error("Contract address is not configured.");
+      const capabilityTags = tags.split(",").map((tag) => tag.trim()).filter(Boolean);
+      if (capabilityTags.length === 0) throw new Error("Add at least one capability.");
       setStatus("Waiting for wallet signature...");
       const signer = await provider.getSigner();
-      const sent = await signer.sendTransaction({
-        to: prepared.transaction.to,
-        value: BigInt(prepared.transaction.value),
-        data: prepared.transaction.data
-      });
+      const contract = new Contract(clientConfig.contractAddress, agentRegistryAbi, signer);
+      const sent = await contract.registerAgent(name.trim(), capabilityTags, metadata.trim(), Number(accessPolicy));
       setTxHash(sent.hash);
       await sent.wait();
-      const confirmed = await fetch("/api/agents/confirm", {
-        method: "POST",
-        headers: { "content-type": "application/json" },
-        body: JSON.stringify({ txHash: sent.hash })
-      }).then((res) => res.json());
-      setAgentAddress(confirmed.agentAddress || await signer.getAddress());
+      setAgentAddress(await signer.getAddress());
       setStatus("Agent registered. Save its address.");
     } catch (error) {
       setStatus(error instanceof Error ? error.message : "Registration failed");

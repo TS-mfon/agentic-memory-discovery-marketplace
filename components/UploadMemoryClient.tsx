@@ -1,7 +1,10 @@
 "use client";
 
 import { useState } from "react";
-import { BrowserProvider } from "ethers";
+import { BrowserProvider, Contract } from "ethers";
+import { agentRegistryAbi } from "@shared/index";
+import { clientConfig } from "@/lib/config";
+import { uploadJsonTo0GFromBrowser } from "@/lib/storage-client";
 
 export function UploadMemoryClient() {
   const [memory, setMemory] = useState("");
@@ -13,9 +16,14 @@ export function UploadMemoryClient() {
       if (!window.ethereum) throw new Error("Install an EVM wallet.");
       const provider = new BrowserProvider(window.ethereum);
       const network = await provider.getNetwork();
-      if (Number(network.chainId) !== 16661) throw new Error("Switch wallet to 0G Mainnet chain 16661.");
+      if (Number(network.chainId) !== clientConfig.chainId) {
+        throw new Error(`Switch wallet to 0G Mainnet chain ${clientConfig.chainId}.`);
+      }
+      if (!clientConfig.contractAddress) throw new Error("Contract address is not configured.");
       const signer = await provider.getSigner();
       const agentAddress = await signer.getAddress();
+      const contract = new Contract(clientConfig.contractAddress, agentRegistryAbi, signer);
+      await contract.getAgentProfile(agentAddress);
       const memoryObject = memory ? JSON.parse(memory) : {
         version: "1.0",
         agentAddress,
@@ -26,22 +34,11 @@ export function UploadMemoryClient() {
         metadata: { source: "web" },
         previousRootHash: "0x0000000000000000000000000000000000000000000000000000000000000000"
       };
-      const message = `0G memory upload authorization agent:${agentAddress.toLowerCase()} ts:${Date.now()}`;
-      setStatus("Sign upload authorization...");
-      const signature = await signer.signMessage(message);
-      const prepared = await fetch("/api/memory/upload", {
-        method: "POST",
-        headers: { "content-type": "application/json" },
-        body: JSON.stringify({ agentAddress, message, signature, memory: memoryObject })
-      }).then((res) => res.json());
-      if (prepared.error) throw new Error(prepared.error);
-      setRoot(prepared.upload.rootHash);
+      setStatus("Uploading memory to 0G Storage...");
+      const uploaded = await uploadJsonTo0GFromBrowser(memoryObject, signer);
+      setRoot(uploaded.rootHash);
       setStatus("Recording memory root on-chain...");
-      const sent = await signer.sendTransaction({
-        to: prepared.transaction.to,
-        value: BigInt(prepared.transaction.value),
-        data: prepared.transaction.data
-      });
+      const sent = await contract.updateMemory(uploaded.rootHash);
       await sent.wait();
       setStatus("Memory uploaded and registry pointer updated.");
     } catch (error) {

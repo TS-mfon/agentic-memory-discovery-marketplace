@@ -39,7 +39,7 @@ export async function uploadJsonTo0G(payload: unknown, encrypted = false): Promi
   if (balance === 0n) throw new Error(`0G Storage signer ${signer.address} has no 0G balance.`);
 
   const encoded = new TextEncoder().encode(JSON.stringify(body, null, 2));
-  const sdk = (await import("@0gfoundation/0g-ts-sdk")) as any;
+  const sdk = (await import("@0gfoundation/0g-storage-ts-sdk")) as any;
   const memData = new sdk.MemData(encoded);
   const [tree, treeErr] = await memData.merkleTree();
   if (treeErr !== null) throw new Error(`0G merkle tree error: ${treeErr}`);
