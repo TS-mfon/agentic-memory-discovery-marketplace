@@ -2,8 +2,8 @@ import "./styles.css";
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Memory0G",
-  description: "Universal agent memory, discovery, and proof roots on 0G.",
+  title: "GuardianMesh",
+  description: "Agentic transaction firewall using 0G Storage, Compute, Chain, DA, and Agent ID.",
   icons: {
     icon: "/icon.svg"
   }
@@ -12,7 +12,9 @@ export const metadata: Metadata = {
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en">
-      <body>{children}</body>
+      <body>
+        {children}
+      </body>
     </html>
   );
 }

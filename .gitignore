@@ -2,6 +2,8 @@ node_modules
 .next
 .env
 .env.local
+.envvv
+.0g-skills
 out
 dist
 cache
@@ -9,5 +11,6 @@ broadcast
 *.log
 *.tsbuildinfo
 .vercel
+.0g-skills
 .agents.local.json
 agent-proof-report.json
