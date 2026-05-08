@@ -7,10 +7,12 @@ export async function GET(req: NextRequest, { params }: { params: Promise<{ agen
   const contract = registry();
   const canRead = await contract.canReadMemory(reader, agentAddress);
   const profile = await contract.getAgentProfile(agentAddress);
+  const accessPolicy = Number(profile.accessPolicy ?? profile[8]);
+  const memoryRootHash = String(profile.memoryRootHash ?? profile[3]);
   return NextResponse.json({
     canRead,
-    encrypted: Number(profile.accessPolicy) !== 0,
-    memoryRootHash: canRead ? profile.memoryRootHash : null,
+    encrypted: accessPolicy !== 0,
+    memoryRootHash: canRead ? memoryRootHash : null,
     note: "Use the 0G Storage indexer to retrieve the blob by memoryRootHash. Encrypted blobs require server-side key material."
   });
 }

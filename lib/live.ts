@@ -41,9 +41,9 @@ async function getRegisteredAddressesFromEvents() {
 async function getAgentProfile(contract: ethers.Contract, address: string): Promise<LiveAgent> {
   const profile = await contract.getAgentProfile(address);
   return {
-    address,
+    address: ethers.getAddress(String(address)),
     name: String(profile.name ?? profile[0]),
-    tags: Array.from((profile.capabilityTags ?? profile[1]) as string[]),
+    tags: Array.from((profile.capabilityTags ?? profile[1] ?? []) as Iterable<unknown>).map(String),
     metadata: String(profile.capabilityMetadata ?? profile[2]),
     memoryRootHash: String(profile.memoryRootHash ?? profile[3]),
     owner: String(profile.owner ?? profile[4]),
@@ -59,13 +59,13 @@ export async function getAgents(): Promise<LiveAgent[]> {
   const contract = registry();
   let addresses: string[] = [];
   try {
-    addresses = (await contract.getAllAgents()).map((address: string) => normalizeAddress(address)).filter(Boolean);
+    addresses = Array.from(await contract.getAllAgents(), (address) => normalizeAddress(String(address))).filter(Boolean);
   } catch {
     addresses = await getRegisteredAddressesFromEvents();
   }
   if (addresses.length === 0) addresses = await getRegisteredAddressesFromEvents();
 
-  const uniqueAddresses = Array.from(new Set(addresses)).slice(-96).reverse();
+  const uniqueAddresses = [...Array.from(new Set(addresses))].slice(-96).reverse();
   const profiles = await Promise.allSettled(uniqueAddresses.map((address) => getAgentProfile(contract, address)));
   return profiles.flatMap((profile) => profile.status === "fulfilled" ? [profile.value] : []);
 }

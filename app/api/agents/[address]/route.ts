@@ -7,15 +7,15 @@ export async function GET(_req: Request, { params }: { params: Promise<{ address
   return NextResponse.json({
     agent: {
       address,
-      name: profile.name,
-      capabilityTags: profile.capabilityTags,
-      capabilityMetadata: profile.capabilityMetadata,
-      memoryRootHash: profile.memoryRootHash,
-      owner: profile.owner,
-      registeredAt: profile.registeredAt.toString(),
-      lastMemoryUpdate: profile.lastMemoryUpdate.toString(),
-      totalMemoryUpdates: profile.totalMemoryUpdates.toString(),
-      accessPolicy: Number(profile.accessPolicy)
+      name: String(profile.name ?? profile[0]),
+      capabilityTags: Array.from((profile.capabilityTags ?? profile[1] ?? []) as Iterable<unknown>).map(String),
+      capabilityMetadata: String(profile.capabilityMetadata ?? profile[2]),
+      memoryRootHash: String(profile.memoryRootHash ?? profile[3]),
+      owner: String(profile.owner ?? profile[4]),
+      registeredAt: (profile.registeredAt ?? profile[5]).toString(),
+      lastMemoryUpdate: (profile.lastMemoryUpdate ?? profile[6]).toString(),
+      totalMemoryUpdates: (profile.totalMemoryUpdates ?? profile[7]).toString(),
+      accessPolicy: Number(profile.accessPolicy ?? profile[8])
     }
   });
 }

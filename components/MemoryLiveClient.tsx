@@ -34,26 +34,35 @@ function agentDescription(metadata: string) {
   return metadata;
 }
 
+function plainTags(value: unknown): string[] {
+  return Array.from((value ?? []) as Iterable<unknown>).map(String);
+}
+
+function plainProfile(profile: any, address: string): LiveAgent {
+  return {
+    address: ethers.getAddress(String(address)),
+    name: String(profile.name ?? profile[0]),
+    tags: plainTags(profile.capabilityTags ?? profile[1]),
+    metadata: String(profile.capabilityMetadata ?? profile[2]),
+    memoryRootHash: String(profile.memoryRootHash ?? profile[3]),
+    owner: String(profile.owner ?? profile[4]),
+    registeredAt: (profile.registeredAt ?? profile[5]).toString(),
+    lastMemoryUpdate: (profile.lastMemoryUpdate ?? profile[6]).toString(),
+    totalMemoryUpdates: (profile.totalMemoryUpdates ?? profile[7]).toString(),
+    accessPolicy: Number(profile.accessPolicy ?? profile[8])
+  };
+}
+
 async function readAgents(): Promise<LiveAgent[]> {
   if (!clientConfig.contractAddress) return [];
   const provider = new ethers.JsonRpcProvider(clientConfig.rpcUrl, clientConfig.chainId);
   const contract = new Contract(clientConfig.contractAddress, agentRegistryAbi, provider);
-  const addresses: string[] = await contract.getAllAgents();
+  const addresses = Array.from(await contract.getAllAgents(), (address) => ethers.getAddress(String(address)));
+  const recentAddresses = [...addresses].slice(-96).reverse();
   const profiles = await Promise.allSettled(
-    addresses.slice(-96).reverse().map(async (address) => {
+    recentAddresses.map(async (address) => {
       const profile = await contract.getAgentProfile(address);
-      return {
-        address,
-        name: String(profile.name ?? profile[0]),
-        tags: Array.from((profile.capabilityTags ?? profile[1]) as string[]),
-        metadata: String(profile.capabilityMetadata ?? profile[2]),
-        memoryRootHash: String(profile.memoryRootHash ?? profile[3]),
-        owner: String(profile.owner ?? profile[4]),
-        registeredAt: (profile.registeredAt ?? profile[5]).toString(),
-        lastMemoryUpdate: (profile.lastMemoryUpdate ?? profile[6]).toString(),
-        totalMemoryUpdates: (profile.totalMemoryUpdates ?? profile[7]).toString(),
-        accessPolicy: Number(profile.accessPolicy ?? profile[8])
-      };
+      return plainProfile(profile, address);
     })
   );
   return profiles.flatMap((profile) => profile.status === "fulfilled" ? [profile.value] : []);
@@ -103,7 +112,7 @@ export function MemoryMetricGrid({ fallbackAgents = 0, mode = "hero" }: { fallba
         <div className="stat"><div className="label">Public memory</div><div className="metric">{publicAgents}</div></div>
         <div className="stat"><div className="label">Capabilities</div><div className="metric">{capabilityCount}</div></div>
         <div className="stat"><div className="label">Updates</div><div className="metric">{updates}</div></div>
-        <p className="microcopy live-note">{status}</p>
+        <p className="microcopy live-note"><span />{status}</p>
       </section>
     );
   }
@@ -116,7 +125,7 @@ export function MemoryMetricGrid({ fallbackAgents = 0, mode = "hero" }: { fallba
         <div className="visual-card"><span>Public memory</span><strong>{publicAgents}</strong></div>
         <div className="visual-card"><span>Updates</span><strong>{updates}</strong></div>
       </div>
-      <p className="microcopy live-note">{status}</p>
+      <p className="microcopy live-note"><span />{status}</p>
     </>
   );
 }
@@ -127,7 +136,7 @@ export function AgentExplorerClient({ initialAgents = [] }: { initialAgents?: Li
 
   return (
     <>
-      <p className="microcopy live-note">{status}</p>
+      <p className="microcopy live-note"><span />{status}</p>
       <section className="cards xl">
         {shownAgents.length === 0 ? <div className="empty">No agents found yet. Registered agents appear here after the next 0G mainnet read.</div> : null}
         {shownAgents.map((agent) => (

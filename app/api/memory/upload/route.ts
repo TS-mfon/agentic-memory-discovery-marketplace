@@ -27,10 +27,12 @@ export async function POST(req: NextRequest) {
 
     const contract = registry();
     const profile = await contract.getAgentProfile(input.agentAddress);
-    if (profile.owner.toLowerCase() !== input.agentAddress.toLowerCase()) {
+    const owner = String(profile.owner ?? profile[4]);
+    const accessPolicy = Number(profile.accessPolicy ?? profile[8]);
+    if (owner.toLowerCase() !== input.agentAddress.toLowerCase()) {
       throw new Error("Only the registered agent owner can upload memory.");
     }
-    const encrypted = Number(profile.accessPolicy) !== MemoryAccess.PUBLIC;
+    const encrypted = accessPolicy !== MemoryAccess.PUBLIC;
     const upload = await uploadJsonTo0G(input.memory, encrypted);
     const iface = new Interface(agentRegistryAbi);
     const transaction = {
